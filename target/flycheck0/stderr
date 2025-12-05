@@ -1,27 +1,18 @@
-   0.470375666s  INFO prepare_target{force=false package_id=ampliclust v0.1.0 (/Users/lucas/pbAA-1.2.0) target="phase1_demo"}: cargo::core::compiler::fingerprint: fingerprint error for ampliclust v0.1.0 (/Users/lucas/pbAA-1.2.0)/Check { test: false }/TargetInner { kind: "example", name: "phase1_demo", tested: false, benched: false, ..: with_path("/Users/lucas/pbAA-1.2.0/examples/phase1_demo.rs", Edition2021) }
-   0.470754791s  INFO prepare_target{force=false package_id=ampliclust v0.1.0 (/Users/lucas/pbAA-1.2.0) target="phase1_demo"}: cargo::core::compiler::fingerprint:     err: failed to read `/Users/lucas/pbAA-1.2.0/target/debug/.fingerprint/ampliclust-2860b0462f391dc4/example-phase1_demo`
-
-Caused by:
-    No such file or directory (os error 2)
-
-Stack backtrace:
-   0: std::backtrace::Backtrace::create
-   1: std::backtrace::Backtrace::capture
-   2: cargo_util::paths::read_bytes
-   3: cargo_util::paths::read
-   4: cargo::core::compiler::fingerprint::_compare_old_fingerprint
-   5: cargo::core::compiler::fingerprint::prepare_target
-   6: cargo::core::compiler::compile
-   7: <cargo::core::compiler::build_runner::BuildRunner>::compile
-   8: cargo::ops::cargo_compile::compile_ws
-   9: cargo::ops::cargo_compile::compile_with_exec
-  10: cargo::ops::cargo_compile::compile
-  11: cargo::commands::check::exec
-  12: <cargo::cli::Exec>::exec
-  13: cargo::main
-  14: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
-  15: std::rt::lang_start::<()>::{closure#0}
-  16: std::rt::lang_start_internal
-  17: _main
+   0.929930292s  INFO prepare_target{force=false package_id=ampliclust v0.1.0 (/Users/lucas/pbAA-1.2.0) target="ampliclust"}: cargo::core::compiler::fingerprint: stale: changed "/Users/lucas/pbAA-1.2.0/src/alignment/placement.rs"
+   0.930209000s  INFO prepare_target{force=false package_id=ampliclust v0.1.0 (/Users/lucas/pbAA-1.2.0) target="ampliclust"}: cargo::core::compiler::fingerprint:           (vs) "/Users/lucas/pbAA-1.2.0/target/debug/.fingerprint/ampliclust-374bc31da98b23b1/dep-lib-ampliclust"
+   0.930215209s  INFO prepare_target{force=false package_id=ampliclust v0.1.0 (/Users/lucas/pbAA-1.2.0) target="ampliclust"}: cargo::core::compiler::fingerprint:                FileTime { seconds: 1764950011, nanos: 573560307 } < FileTime { seconds: 1764950047, nanos: 349686392 }
+   0.931112834s  INFO prepare_target{force=false package_id=ampliclust v0.1.0 (/Users/lucas/pbAA-1.2.0) target="ampliclust"}: cargo::core::compiler::fingerprint: fingerprint dirty for ampliclust v0.1.0 (/Users/lucas/pbAA-1.2.0)/Check { test: false }/TargetInner { doctest: false, ..: lib_target("ampliclust", ["lib"], "/Users/lucas/pbAA-1.2.0/src/lib.rs", Edition2021) }
+   0.931407917s  INFO prepare_target{force=false package_id=ampliclust v0.1.0 (/Users/lucas/pbAA-1.2.0) target="ampliclust"}: cargo::core::compiler::fingerprint:     dirty: FsStatusOutdated(StaleItem(ChangedFile { reference: "/Users/lucas/pbAA-1.2.0/target/debug/.fingerprint/ampliclust-374bc31da98b23b1/dep-lib-ampliclust", reference_mtime: FileTime { seconds: 1764950011, nanos: 573560307 }, stale: "/Users/lucas/pbAA-1.2.0/src/alignment/placement.rs", stale_mtime: FileTime { seconds: 1764950047, nanos: 349686392 } }))
+   1.044438792s  INFO prepare_target{force=false package_id=ampliclust v0.1.0 (/Users/lucas/pbAA-1.2.0) target="ampliclust"}: cargo::core::compiler::fingerprint: stale: changed "/Users/lucas/pbAA-1.2.0/src/alignment/placement.rs"
+   1.044450542s  INFO prepare_target{force=false package_id=ampliclust v0.1.0 (/Users/lucas/pbAA-1.2.0) target="ampliclust"}: cargo::core::compiler::fingerprint:           (vs) "/Users/lucas/pbAA-1.2.0/target/debug/.fingerprint/ampliclust-3b4b11ecfbebce67/dep-test-lib-ampliclust"
+   1.044452292s  INFO prepare_target{force=false package_id=ampliclust v0.1.0 (/Users/lucas/pbAA-1.2.0) target="ampliclust"}: cargo::core::compiler::fingerprint:                FileTime { seconds: 1764950011, nanos: 573628016 } < FileTime { seconds: 1764950047, nanos: 349686392 }
+   1.045035292s  INFO prepare_target{force=false package_id=ampliclust v0.1.0 (/Users/lucas/pbAA-1.2.0) target="ampliclust"}: cargo::core::compiler::fingerprint: fingerprint dirty for ampliclust v0.1.0 (/Users/lucas/pbAA-1.2.0)/Check { test: true }/TargetInner { doctest: false, ..: lib_target("ampliclust", ["lib"], "/Users/lucas/pbAA-1.2.0/src/lib.rs", Edition2021) }
+   1.045044417s  INFO prepare_target{force=false package_id=ampliclust v0.1.0 (/Users/lucas/pbAA-1.2.0) target="ampliclust"}: cargo::core::compiler::fingerprint:     dirty: FsStatusOutdated(StaleItem(ChangedFile { reference: "/Users/lucas/pbAA-1.2.0/target/debug/.fingerprint/ampliclust-3b4b11ecfbebce67/dep-test-lib-ampliclust", reference_mtime: FileTime { seconds: 1764950011, nanos: 573628016 }, stale: "/Users/lucas/pbAA-1.2.0/src/alignment/placement.rs", stale_mtime: FileTime { seconds: 1764950047, nanos: 349686392 } }))
+   1.054659292s  INFO prepare_target{force=false package_id=ampliclust v0.1.0 (/Users/lucas/pbAA-1.2.0) target="ampliclust"}: cargo::core::compiler::fingerprint: fingerprint dirty for ampliclust v0.1.0 (/Users/lucas/pbAA-1.2.0)/Check { test: false }/TargetInner { name: "ampliclust", doc: true, ..: with_path("/Users/lucas/pbAA-1.2.0/src/main.rs", Edition2021) }
+   1.054666167s  INFO prepare_target{force=false package_id=ampliclust v0.1.0 (/Users/lucas/pbAA-1.2.0) target="ampliclust"}: cargo::core::compiler::fingerprint:     dirty: FsStatusOutdated(StaleDepFingerprint { name: "ampliclust" })
+   1.056390917s  INFO prepare_target{force=false package_id=ampliclust v0.1.0 (/Users/lucas/pbAA-1.2.0) target="ampliclust"}: cargo::core::compiler::fingerprint: fingerprint dirty for ampliclust v0.1.0 (/Users/lucas/pbAA-1.2.0)/Check { test: true }/TargetInner { name: "ampliclust", doc: true, ..: with_path("/Users/lucas/pbAA-1.2.0/src/main.rs", Edition2021) }
+   1.056395834s  INFO prepare_target{force=false package_id=ampliclust v0.1.0 (/Users/lucas/pbAA-1.2.0) target="ampliclust"}: cargo::core::compiler::fingerprint:     dirty: FsStatusOutdated(StaleDepFingerprint { name: "ampliclust" })
+   1.057964250s  INFO prepare_target{force=false package_id=ampliclust v0.1.0 (/Users/lucas/pbAA-1.2.0) target="phase1_demo"}: cargo::core::compiler::fingerprint: fingerprint dirty for ampliclust v0.1.0 (/Users/lucas/pbAA-1.2.0)/Check { test: false }/TargetInner { kind: "example", name: "phase1_demo", tested: false, benched: false, ..: with_path("/Users/lucas/pbAA-1.2.0/examples/phase1_demo.rs", Edition2021) }
+   1.057969417s  INFO prepare_target{force=false package_id=ampliclust v0.1.0 (/Users/lucas/pbAA-1.2.0) target="phase1_demo"}: cargo::core::compiler::fingerprint:     dirty: FsStatusOutdated(StaleDepFingerprint { name: "ampliclust" })
     Checking ampliclust v0.1.0 (/Users/lucas/pbAA-1.2.0)
-    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.75s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.58s
