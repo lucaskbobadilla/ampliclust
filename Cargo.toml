@@ -1,0 +1,76 @@
+[package]
+name = "ampliclust"
+version = "0.1.0"
+edition = "2021"
+authors = ["Your Name <your.email@example.com>"]
+description = "Universal amplicon clustering tool for PacBio, ONT, and Illumina data"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/yourusername/ampliclust"
+keywords = ["bioinformatics", "amplicon", "clustering", "sequencing"]
+categories = ["science", "command-line-utilities"]
+
+[dependencies]
+# I/O and parsing
+rust-htslib = "0.47"
+noodles = { version = "0.70", features = ["bam", "sam", "fastq", "fasta"] }
+bio = "1.6"
+seq_io = "0.3"
+flate2 = "1.0"
+
+# Alignment and sequence analysis
+# minimap2 = "0.1"  # Optional - uncomment if using minimap2
+# edlib = "0.1"     # Optional - uncomment if using edlib
+
+# Clustering and statistics
+ndarray = { version = "0.15", features = ["rayon"] }
+linfa = "0.7"
+linfa-clustering = "0.7"
+statrs = "0.16"
+
+# Parallelization
+rayon = "1.8"
+crossbeam = "0.8"
+
+# CLI and utilities
+clap = { version = "4.5", features = ["derive", "cargo"] }
+anyhow = "1.0"
+thiserror = "1.0"
+log = "0.4"
+env_logger = "0.11"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+toml = "0.8"
+
+# Performance
+ahash = "0.8"
+parking_lot = "0.12"
+
+# Utilities
+indicatif = "0.17"  # Progress bars
+regex = "1.10"
+lazy_static = "1.4"
+itertools = "0.12"
+chrono = "0.4"      # Date/time for logging
+num_cpus = "1.16"   # CPU detection
+
+[dev-dependencies]
+criterion = { version = "0.5", features = ["html_reports"] }
+proptest = "1.4"
+tempfile = "3.8"
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+codegen-units = 1
+
+[profile.bench]
+inherits = "release"
+
+[[bin]]
+name = "ampliclust"
+path = "src/main.rs"
+
+[lib]
+name = "ampliclust"
+path = "src/lib.rs"
+doctest = false

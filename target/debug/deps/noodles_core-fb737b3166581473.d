@@ -1,0 +1,10 @@
+/Users/lucas/pbAA-1.2.0/target/debug/deps/noodles_core-fb737b3166581473.d: /Users/lucas/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/noodles-core-0.14.0/src/lib.rs /Users/lucas/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/noodles-core-0.14.0/src/error.rs /Users/lucas/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/noodles-core-0.14.0/src/position.rs /Users/lucas/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/noodles-core-0.14.0/src/position/sequence_index.rs /Users/lucas/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/noodles-core-0.14.0/src/region.rs /Users/lucas/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/noodles-core-0.14.0/src/region/interval.rs
+
+/Users/lucas/pbAA-1.2.0/target/debug/deps/libnoodles_core-fb737b3166581473.rmeta: /Users/lucas/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/noodles-core-0.14.0/src/lib.rs /Users/lucas/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/noodles-core-0.14.0/src/error.rs /Users/lucas/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/noodles-core-0.14.0/src/position.rs /Users/lucas/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/noodles-core-0.14.0/src/position/sequence_index.rs /Users/lucas/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/noodles-core-0.14.0/src/region.rs /Users/lucas/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/noodles-core-0.14.0/src/region/interval.rs
+
+/Users/lucas/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/noodles-core-0.14.0/src/lib.rs:
+/Users/lucas/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/noodles-core-0.14.0/src/error.rs:
+/Users/lucas/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/noodles-core-0.14.0/src/position.rs:
+/Users/lucas/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/noodles-core-0.14.0/src/position/sequence_index.rs:
+/Users/lucas/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/noodles-core-0.14.0/src/region.rs:
+/Users/lucas/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/noodles-core-0.14.0/src/region/interval.rs:
