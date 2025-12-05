@@ -332,7 +332,9 @@ fn run_clustering(config: ampliclust::Config) -> Result<()> {
     use ampliclust::io::bam::read_from_bam;
     use ampliclust::alignment::kmer::KmerIndex;
     use ampliclust::alignment::placement::{place_reads, PlacementConfig, calculate_placement_stats};
+    use ampliclust::reads::SequenceRead;
     use std::collections::HashMap;
+    use log::warn;
     
     info!("=== Phase 1: Loading Input Data ===");
     
@@ -480,7 +482,229 @@ fn run_clustering(config: ampliclust::Config) -> Result<()> {
             }
         }
         
-        info!("Phase 1 & 2 complete! Next: implement clustering (Phase 3)");
+        // === Phase 3: Clustering ===
+        info!("=== Phase 3: Clustering ===");
+        
+        use ampliclust::clustering::reference_guided::{cluster_by_placement, PlacedRead};
+        
+        // Convert placements to PlacedRead format
+        let placed_reads: Vec<PlacedRead> = filtered_reads.iter()
+            .zip(placements.iter())
+            .filter_map(|(read, placement)| {
+                placement.as_ref().map(|p| {
+                    let reference = &references[p.ref_id];
+                    PlacedRead {
+                        read_id: read.id.clone(),
+                        reference_name: reference.name.clone(),
+                        locus: reference.group.clone(),
+                        confidence: p.confidence,
+                        hits: p.hits,
+                    }
+                })
+            })
+            .collect();
+        
+        // Cluster reads based on their placements
+        let clustering_result = cluster_by_placement(
+            &placed_reads,
+            0.5,  // min_confidence
+        )?;
+        
+        info!("Clustering results:");
+        info!("  Total clusters: {}", clustering_result.clusters.len());
+        info!("  Total reads clustered: {}", clustering_result.total_reads);
+        info!("  Unassigned reads: {}", clustering_result.unassigned_reads.len());
+        
+        // Calculate and set frequencies
+        let mut result = clustering_result;
+        result.calculate_frequencies();
+        result.calculate_guide_frequencies();  // NEW: Calculate guide-specific frequencies
+        
+        // Sort clusters by size (largest first)
+        result.clusters.sort_by(|a, b| b.metrics.read_count.cmp(&a.metrics.read_count));
+        
+        // Print top clusters
+        info!("Top 5 clusters:");
+        for cluster in result.clusters.iter().take(5) {
+            info!("  Cluster {}: {} reads ({:.1}%) -> {}",
+                  cluster.id,
+                  cluster.metrics.read_count,
+                  cluster.metrics.frequency * 100.0,
+                  cluster.guide_name.as_deref().unwrap_or("unknown"));
+        }
+        
+        // Write cluster assignments
+        let cluster_file = format!("{}_clusters.txt", config.output_prefix);
+        info!("Writing cluster assignments to: {}", cluster_file);
+        
+        let mut out = std::fs::File::create(&cluster_file)?;
+        writeln!(out, "cluster_id\treference\tlocus\tread_count\tfrequency\tguide_freq\tavg_quality")?;
+        
+        for cluster in &result.clusters {
+            let locus = references.get(cluster.id)
+                .and_then(|r| r.group.as_deref())
+                .unwrap_or("unknown");
+            
+            writeln!(
+                out,
+                "{}\t{}\t{}\t{}\t{:.4}\t{:.4}\t{:.1}",
+                cluster.id,
+                cluster.guide_name.as_deref().unwrap_or("none"),
+                locus,
+                cluster.metrics.read_count,
+                cluster.metrics.frequency,
+                cluster.metrics.guide_frequency,
+                cluster.metrics.avg_quality
+            )?;
+        }
+        
+        // Write detailed read-to-cluster mapping
+        let read_cluster_file = format!("{}_read_clusters.txt", config.output_prefix);
+        info!("Writing read-to-cluster mapping to: {}", read_cluster_file);
+        
+        let mut out = std::fs::File::create(&read_cluster_file)?;
+        writeln!(out, "read_id\tcluster_id\treference\tlocus")?;
+        
+        for cluster in &result.clusters {
+            let locus = references.get(cluster.id)
+                .and_then(|r| r.group.as_deref())
+                .unwrap_or("unknown");
+            
+            for read_id in &cluster.reads {
+                writeln!(
+                    out,
+                    "{}\t{}\t{}\t{}",
+                    read_id,
+                    cluster.id,
+                    cluster.guide_name.as_deref().unwrap_or("none"),
+                    locus
+                )?;
+            }
+        }
+        
+        // === Phase 3.5: Write per-cluster FASTA files ===
+        info!("Writing per-cluster FASTA files...");
+        
+        // Build read lookup map for efficient access
+        let read_map: std::collections::HashMap<String, &SequenceRead> = filtered_reads.iter()
+            .map(|r| (r.id.clone(), r))
+            .collect();
+        
+        let mut fasta_files_written = 0;
+        for cluster in &result.clusters {
+            if cluster.reads.is_empty() {
+                continue;
+            }
+            
+            // Create filename for this cluster
+            let cluster_fasta = format!(
+                "{}_cluster_{}_{}_{}_reads.fasta",
+                config.output_prefix,
+                cluster.id,
+                cluster.guide_name.as_deref().unwrap_or("none"),
+                cluster.metrics.read_count
+            );
+            
+            let mut cluster_out = std::fs::File::create(&cluster_fasta)?;
+            
+            // Write all reads in this cluster to the FASTA file
+            for read_id in &cluster.reads {
+                if let Some(read) = read_map.get(read_id) {
+                    // Write FASTA header with metadata
+                    writeln!(
+                        cluster_out,
+                        ">{} cluster:{} guide:{} total_freq:{:.4} guide_freq:{:.4}",
+                        read.id,
+                        cluster.id,
+                        cluster.guide_name.as_deref().unwrap_or("none"),
+                        cluster.metrics.frequency,
+                        cluster.metrics.guide_frequency
+                    )?;
+                    
+                    // Write sequence in 80-character lines
+                    for chunk in read.sequence.chunks(80) {
+                        writeln!(cluster_out, "{}", String::from_utf8_lossy(chunk))?;
+                    }
+                }
+            }
+            
+            fasta_files_written += 1;
+        }
+        
+        info!("Wrote {} per-cluster FASTA files", fasta_files_written);
+        
+        // === Phase 4: Consensus Generation ===
+        info!("=== Phase 4: Consensus Generation ===");
+        
+        use ampliclust::consensus::{generate_consensus, ConsensusMethod};
+        
+        // Note: read_map already built in Phase 3.5 above
+        
+        // Generate consensus for each cluster
+        let mut consensus_count = 0;
+        for cluster in &mut result.clusters {
+            if cluster.reads.is_empty() {
+                continue;
+            }
+            
+            // Get reads for this cluster
+            let cluster_reads: Vec<&SequenceRead> = cluster.reads.iter()
+                .filter_map(|id| read_map.get(id))
+                .copied()
+                .collect();
+            
+            if cluster_reads.is_empty() {
+                warn!("Cluster {} has no reads in map", cluster.id);
+                continue;
+            }
+            
+            // Generate consensus (using quality-weighted by default)
+            match generate_consensus(&cluster_reads, ConsensusMethod::QualityWeighted) {
+                Ok(consensus) => {
+                    info!("  Cluster {}: Generated consensus ({} bp, avg Q={:.1})",
+                          cluster.id,
+                          consensus.length,
+                          consensus.quality.iter().map(|&q| q as f64).sum::<f64>() / consensus.length as f64);
+                    cluster.set_consensus(consensus);
+                    consensus_count += 1;
+                }
+                Err(e) => {
+                    warn!("  Cluster {}: Failed to generate consensus: {}", cluster.id, e);
+                }
+            }
+        }
+        
+        info!("Generated consensus for {}/{} clusters", consensus_count, result.clusters.len());
+        
+        // Write consensus sequences to FASTA
+        let consensus_fasta = format!("{}_consensus.fasta", config.output_prefix);
+        info!("Writing consensus sequences to: {}", consensus_fasta);
+        
+        let mut fasta_out = std::fs::File::create(&consensus_fasta)?;
+        for cluster in &result.clusters {
+            if let Some(ref consensus) = cluster.consensus {
+                let header = format!(
+                    ">cluster_{} ref:{} reads:{} freq:{:.4} length:{}",
+                    cluster.id,
+                    cluster.guide_name.as_deref().unwrap_or("none"),
+                    cluster.metrics.read_count,
+                    cluster.metrics.frequency,
+                    consensus.length
+                );
+                
+                writeln!(fasta_out, "{}", header)?;
+                
+                // Write sequence in 80-character lines
+                for chunk in consensus.sequence.chunks(80) {
+                    writeln!(fasta_out, "{}", String::from_utf8_lossy(chunk))?;
+                }
+            }
+        }
+        
+        info!("Phase 1, 2, 3 & 4 complete!");
+        info!("Next steps:");
+        info!("  - Phase 5: Variant calling and filtering");
+        info!("  - Phase 6: Metrics and quality control");
         
     } else {
         info!("=== De novo mode ===");

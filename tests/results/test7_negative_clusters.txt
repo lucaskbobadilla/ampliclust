@@ -1,0 +1,1 @@
+cluster_id	reference	locus	read_count	frequency	guide_freq	avg_quality

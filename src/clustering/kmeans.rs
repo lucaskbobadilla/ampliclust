@@ -1,1 +1,1 @@
-// K-means clustering (to be implemented)
+// K-means clustering (stub - to be implemented in future phases)

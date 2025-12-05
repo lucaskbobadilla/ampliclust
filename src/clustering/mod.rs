@@ -110,6 +110,29 @@ impl ClusteringResult {
             cluster.metrics.frequency = cluster.metrics.read_count as f64 / total;
         }
     }
+    
+    /// Calculate guide-specific frequencies (frequency within each guide/locus)
+    pub fn calculate_guide_frequencies(&mut self) {
+        use std::collections::HashMap;
+        
+        // Count total reads per guide
+        let mut guide_totals: HashMap<String, usize> = HashMap::new();
+        for cluster in &self.clusters {
+            if let Some(ref guide) = cluster.guide_name {
+                *guide_totals.entry(guide.clone()).or_insert(0) += cluster.metrics.read_count;
+            }
+        }
+        
+        // Calculate frequency relative to guide
+        for cluster in &mut self.clusters {
+            if let Some(ref guide) = cluster.guide_name {
+                if let Some(&total) = guide_totals.get(guide) {
+                    cluster.metrics.guide_frequency = 
+                        cluster.metrics.read_count as f64 / total as f64;
+                }
+            }
+        }
+    }
 }
 
 #[cfg(test)]

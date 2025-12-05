@@ -1,0 +1,6 @@
+cluster_id	reference	locus	read_count	frequency	guide_freq	avg_quality
+0	Allele_A_01	Locus_A	73	0.3650	1.0000	0.0
+4	Allele_A_02	Locus_B	58	0.2900	1.0000	0.0
+1	Allele_B_01	Locus_A	34	0.1700	1.0000	0.0
+3	Allele_A_03	Locus_B	27	0.1350	1.0000	0.0
+2	Allele_B_02	Locus_A	8	0.0400	1.0000	0.0

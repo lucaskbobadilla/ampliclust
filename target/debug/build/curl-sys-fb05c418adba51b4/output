@@ -99,6 +99,14 @@ exit status: 0
 exit status: 0
 exit status: 0
 exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
 cargo:warning=curl/lib/mprintf.c:712:4: warning: 'sprintf' is deprecated: This function is provided for compatibility reasons only.  Due to security concerns inherent in the design of sprintf(3), it is highly recommended that you use snprintf(3) instead. [-Wdeprecated-declarations]
 cargo:warning=  712 |   (sprintf)(work, formatbuf, dnum);
 cargo:warning=      |    ^
@@ -109,14 +117,6 @@ cargo:warning=/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/sy
 cargo:warning=  227 |         #define __deprecated_msg(_msg) __attribute__((__deprecated__(_msg)))
 cargo:warning=      |                                                       ^
 cargo:warning=1 warning generated.
-exit status: 0
-exit status: 0
-exit status: 0
-exit status: 0
-exit status: 0
-exit status: 0
-exit status: 0
-exit status: 0
 exit status: 0
 exit status: 0
 exit status: 0

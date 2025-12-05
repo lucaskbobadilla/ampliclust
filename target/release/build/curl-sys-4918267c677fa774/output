@@ -49,14 +49,6 @@ exit status: 0
 exit status: 0
 exit status: 0
 exit status: 0
-exit status: 0
-exit status: 0
-exit status: 0
-exit status: 0
-exit status: 0
-exit status: 0
-exit status: 0
-exit status: 0
 cargo:warning=curl/lib/curlx/inet_ntop.c:66:10: warning: 'sprintf' is deprecated: This function is provided for compatibility reasons only.  Due to security concerns inherent in the design of sprintf(3), it is highly recommended that you use snprintf(3) instead. [-Wdeprecated-declarations]
 cargo:warning=   66 |   (void)(sprintf)(tmp, "%d.%d.%d.%d",
 cargo:warning=      |          ^
@@ -66,6 +58,14 @@ cargo:warning=      | ^
 cargo:warning=/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/sys/cdefs.h:227:48: note: expanded from macro '__deprecated_msg'
 cargo:warning=  227 |         #define __deprecated_msg(_msg) __attribute__((__deprecated__(_msg)))
 cargo:warning=      |                                                       ^
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
 cargo:warning=1 warning generated.
 exit status: 0
 exit status: 0
@@ -108,15 +108,15 @@ cargo:warning=      | ^
 cargo:warning=/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/sys/cdefs.h:227:48: note: expanded from macro '__deprecated_msg'
 cargo:warning=  227 |         #define __deprecated_msg(_msg) __attribute__((__deprecated__(_msg)))
 cargo:warning=      |                                                       ^
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
+exit status: 0
 cargo:warning=1 warning generated.
-exit status: 0
-exit status: 0
-exit status: 0
-exit status: 0
-exit status: 0
-exit status: 0
-exit status: 0
-exit status: 0
 exit status: 0
 exit status: 0
 exit status: 0

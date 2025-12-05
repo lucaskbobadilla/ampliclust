@@ -24,6 +24,10 @@ This directory contains synthetic test data for validating Phase 1 & 2.
 
 - **reads.fastq.gz**: Gzipped version of reads.fastq
 
+- **reads.bam**: BAM format input (200 reads, first 200 from reads.fastq)
+  - For testing BAM input functionality
+  - Unmapped reads (testing input parsing, not alignment)
+
 - **varied_quality.fastq**: 500 reads with mixed quality
   - 80% high quality (Q30-Q45)
   - 20% low quality (Q5-Q20)
@@ -57,6 +61,15 @@ This directory contains synthetic test data for validating Phase 1 & 2.
   --input test_data/varied_quality.fastq \
   --output-prefix test_filtered \
   --min-read-quality 25 \
+  --platform pacbio
+```
+
+### Test BAM input:
+```bash
+./target/release/ampliclust cluster \
+  --guide test_data/references.fasta \
+  --input test_data/reads.bam \
+  --output-prefix test_bam \
   --platform pacbio
 ```
 

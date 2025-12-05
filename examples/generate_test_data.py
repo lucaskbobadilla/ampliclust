@@ -68,14 +68,61 @@ def write_fastq(filename, reads, compress=False):
     
     print(f"✓ Created {filename} with {len(reads)} reads")
 
+def write_bam(filename, reads, references):
+    """Write reads to BAM file using samtools via subprocess."""
+    import subprocess
+    import tempfile
+    
+    # Check if samtools is available
+    try:
+        result = subprocess.run(['samtools', '--version'], 
+                              capture_output=True, text=True)
+        if result.returncode != 0:
+            print(f"⚠ Skipping BAM generation - samtools not found")
+            return False
+    except FileNotFoundError:
+        print(f"⚠ Skipping BAM generation - samtools not installed")
+        return False
+    
+    # Create temporary SAM file
+    with tempfile.NamedTemporaryFile(mode='w', suffix='.sam', delete=False) as sam_file:
+        sam_path = sam_file.name
+        
+        # Write SAM header
+        sam_file.write("@HD\tVN:1.6\tSO:unsorted\n")
+        for ref_name, ref_seq in references:
+            ref_name_clean = ref_name.split('|')[0]  # Remove group annotation
+            sam_file.write(f"@SQ\tSN:{ref_name_clean}\tLN:{len(ref_seq)}\n")
+        sam_file.write("@PG\tID:test_generator\tPN:generate_test_data.py\tVN:1.0\n")
+        
+        # Write reads as unmapped (for testing input only)
+        for read_id, seq, qual in reads:
+            sam_file.write(f"{read_id}\t4\t*\t0\t0\t*\t*\t0\t0\t{seq}\t{qual}\n")
+    
+    # Convert SAM to BAM using samtools
+    try:
+        subprocess.run(['samtools', 'view', '-bS', '-o', str(filename), sam_path],
+                      check=True, capture_output=True)
+        subprocess.run(['samtools', 'index', str(filename)],
+                      check=True, capture_output=True)
+        print(f"✓ Created {filename} with {len(reads)} reads (BAM format)")
+        
+        # Clean up temp SAM file
+        Path(sam_path).unlink()
+        return True
+    except subprocess.CalledProcessError as e:
+        print(f"⚠ BAM generation failed: {e}")
+        Path(sam_path).unlink(missing_ok=True)
+        return False
+
 def main():
     """Generate test data."""
     print("=" * 60)
     print("AmplicLust Test Data Generator")
     print("=" * 60)
     
-    output_dir = Path("test_data")
-    output_dir.mkdir(exist_ok=True)
+    output_dir = Path("tests/test_data")
+    output_dir.mkdir(parents=True, exist_ok=True)
     
     random.seed(42)  # Reproducible
     
@@ -162,8 +209,13 @@ def main():
     
     write_fastq(output_dir / "varied_quality.fastq", varied_reads)
     
+    # 6. Generate BAM file (subset of reads for testing)
+    print("\n[6/7] Generating BAM file...")
+    bam_reads = reads[:200]  # Use first 200 reads for BAM test
+    write_bam(output_dir / "reads.bam", bam_reads, references)
+    
     # Create a README
-    print("\n[6/6] Creating README...")
+    print("\n[7/7] Creating README...")
     readme_content = f"""# Test Data for AmplicLust
 
 This directory contains synthetic test data for validating Phase 1 & 2.
@@ -189,6 +241,10 @@ This directory contains synthetic test data for validating Phase 1 & 2.
   - Average quality: Q35
 
 - **reads.fastq.gz**: Gzipped version of reads.fastq
+
+- **reads.bam**: BAM format input (200 reads, first 200 from reads.fastq)
+  - For testing BAM input functionality
+  - Unmapped reads (testing input parsing, not alignment)
 
 - **varied_quality.fastq**: 500 reads with mixed quality
   - 80% high quality (Q30-Q45)
@@ -223,6 +279,15 @@ This directory contains synthetic test data for validating Phase 1 & 2.
   --input test_data/varied_quality.fastq \\
   --output-prefix test_filtered \\
   --min-read-quality 25 \\
+  --platform pacbio
+```
+
+### Test BAM input:
+```bash
+./target/release/ampliclust cluster \\
+  --guide test_data/references.fasta \\
+  --input test_data/reads.bam \\
+  --output-prefix test_bam \\
   --platform pacbio
 ```
 

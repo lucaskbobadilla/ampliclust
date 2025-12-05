@@ -10,6 +10,9 @@ pub struct ClusterMetrics {
     /// Frequency/abundance of cluster relative to total
     pub frequency: f64,
     
+    /// Frequency relative to guide/locus (NEW)
+    pub guide_frequency: f64,
+    
     /// Diversity metric (Shannon entropy or similar)
     pub diversity: f64,
     
@@ -34,6 +37,7 @@ impl Default for ClusterMetrics {
         Self {
             read_count: 0,
             frequency: 0.0,
+            guide_frequency: 0.0,
             diversity: 0.0,
             avg_quality: 0.0,
             chimera_score: None,

@@ -52,6 +52,7 @@ lazy_static = "1.4"
 itertools = "0.12"
 chrono = "0.4"      # Date/time for logging
 num_cpus = "1.16"   # CPU detection
+rand = "0.8"        # Random number generation for clustering
 
 [dev-dependencies]
 criterion = { version = "0.5", features = ["html_reports"] }
