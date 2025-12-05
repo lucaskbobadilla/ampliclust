@@ -1,0 +1,1 @@
+read_id	ref_id	ref_name	confidence	hits	read_length
