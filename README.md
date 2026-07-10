@@ -473,7 +473,7 @@ Then open `painted.bam` in IGV. Reads will be colored and grouped by cluster.
 ## Support
 
 For bug reports, feature requests, or questions:
-- GitHub Issues: [https://github.com/yourusername/ampliclust/issues](https://github.com/yourusername/ampliclust/issues)
+- GitHub Issues: [https://github.com/yourusername/ampliclust/issues](https://github.com/lucaskbobadilla/ampliclust/issues)
 - Documentation: See `AMPLICLUST_README.md` and `IMPLEMENTATION_GUIDE.md`
 
 ## License
@@ -486,7 +486,6 @@ If you use AmplicLust in your research, please cite:
 
 ```
 AmplicLust: Universal Amplicon Clustering Tool
-[Your citation information here]
 ```
 
 ## Acknowledgments
