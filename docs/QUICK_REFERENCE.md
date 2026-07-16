@@ -176,32 +176,13 @@ pub struct ClusterMetrics {
 }
 ```
 
-## 📚 Implementation Priority
-
-1. ✅ Project setup
-2. ⏳ FASTQ/FASTA I/O
-3. ⏳ K-mer indexing
-4. ⏳ Read placement
-5. ⏳ Clustering algorithms
-6. ⏳ Consensus generation
-7. ⏳ Metrics calculation
-8. ⏳ Output generation
-
 ## 💡 Tips
 
 - Use `--log-level DEBUG` for troubleshooting
 - Start with small test datasets
 - Profile with `cargo flamegraph`
 - Test each module independently
-- Compare results with pbaa on demo data
 
-## 📖 Documentation Links
-
-- Design: `rust_amplicon_cluster_design.md`
-- Implementation: `IMPLEMENTATION_GUIDE.md`
-- Examples: `EXAMPLES.md`
-- README: `AMPLICLUST_README.md`
-- Summary: `PROJECT_SUMMARY.md`
 
 ## 🐛 Debugging
 
